@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_px/AuthModule/bloc/datacollector_bloc.dart';
+import 'package:flutter_px/AuthModule/bloc/datacollector_event.dart';
+import 'package:flutter_px/AuthModule/bloc/datacollector_state.dart';
 import 'package:flutter_px/Common/button.dart';
 import 'package:flutter_px/Common/gradient.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PersonalInformationForm extends StatelessWidget {
   final _formKey = GlobalKey<FormState>(); // Form key for validation.
@@ -23,292 +27,340 @@ class PersonalInformationForm extends StatelessWidget {
           toolbarHeight: 10,
           shadowColor: Colors.white,
         ),
-        body: Container(
-          color: Colors.white, // Set form background to white.
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Stack(children: [
-            SingleChildScrollView(
-              child: Form(
-                  key: _formKey, // Assign the form key.
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
-
-                        // Header Text: "Please tell us a little about yourself"
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Please tell us a little about ',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold, // Bold text.
-                              ),
-                            ),
-                            Text(
-                              'yourself',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold, // Bold text.
-                                color: Colors.blue, // Blue color.
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 24),
-
-                        // Divider with "or"
-
-                        const SizedBox(height: 16),
-
-                        // First Name, Middle Name, National ID No.
-                        _buildTextField(
-                            label: 'User Name',
-                            hint: '',
-                            dataMap: _userData,
-                            dataLabel: 'username'),
-                        _buildTextField(
-                            label: 'Email',
-                            hint: '',
-                            dataMap: _userData,
-                            dataLabel: 'email'),
-                        Row(children: [
-                          Expanded(
-                            child: _buildTextField(
-                                label: 'First Name',
-                                hint: '',
-                                dataMap: _userData,
-                                dataLabel: 'firstName'),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildTextField(
-                                label: 'Last Name',
-                                hint: '',
-                                dataMap: _userData,
-                                dataLabel: 'lastName'),
-                          )
-                        ]),
-
-                        _buildTextField(
-                            label: 'password',
-                            hint: '',
-                            obscureText: true,
-                            dataMap: _userData,
-                            dataLabel: 'password'),
-                        _buildTextField(
-                            label: 'confirm password',
-                            hint: '',
-                            obscureText: true,
-                            dataLabel: "confirm",
-                            dataMap: _support),
-                        const Row(
-                          children: [
-                            Expanded(child: Divider()),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                'Address Information',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold, // Bold text.
-                                  color: Colors.blue, // Blue color.
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Divider()),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'Country',
-                                  hint: '',
-                                  dataMap: _addressData,
-                                  dataLabel: 'country'),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                                child: _buildTextField(
-                                    label: 'Region',
-                                    hint: '',
-                                    dataMap: _addressData,
-                                    dataLabel: 'region')),
-                          ],
-                        ),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'City',
-                                  hint: '',
-                                  dataMap: _addressData,
-                                  dataLabel: 'city'),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                                child: _buildTextField(
-                                    label: 'zone or subcity ',
-                                    hint: '',
-                                    dataMap: _addressData,
-                                    dataLabel: 'zone_or_subcity')),
-                          ],
-                        ),
-                        _buildTextField(
-                            label: 'woreda ',
-                            hint: '',
-                            dataMap: _addressData,
-                            dataLabel: 'woreda'),
-                        _buildTextField(
-                            label: 'postal code ',
-                            hint: '',
-                            dataMap: _addressData,
-                            dataLabel: 'postal_code'),
-                        _buildTextField(
-                            label: 'Address line 1 ',
-                            hint: '',
-                            dataMap: _addressData,
-                            dataLabel: 'address_line_1'),
-                        _buildTextField(
-                            label: 'Address line 2',
-                            hint: '',
-                            dataMap: _addressData,
-                            dataLabel: 'address_line_2'),
-
-                        const Row(
-                          children: [
-                            Expanded(child: Divider()),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                'Profile Information',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold, // Bold text.
-                                  color: Colors.blue, // Blue color.
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Divider()),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        _buildTextField(
-                            label: 'Nationality',
-                            hint: '',
-                            dataMap: _profileData,
-                            dataLabel: 'nationality'),
-                        // Date of Birth and Gender in one row.
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'Date of Birth',
-                                  hint: '',
-                                  dataMap: _profileData,
-                                  dataLabel: 'date_of_birth'),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'Gender',
-                                  hint: '',
-                                  dataMap: _profileData,
-                                  dataLabel: 'gender'),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        _buildTextField(
-                            label: 'Phone Number',
-                            hint: '',
-                            dataMap: _profileData,
-                            dataLabel: 'phone_number'),
-
-                        // Education Level and Marital Status
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'Education Level',
-                                  hint: '',
-                                  dataMap: _profileData,
-                                  dataLabel: 'education_level'),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: _buildTextField(
-                                  label: 'Marital Status',
-                                  hint: '',
-                                  dataMap: _profileData,
-                                  dataLabel: 'marriage_status'),
-                            ),
-                          ],
-                        ),
-
-                        const SizedBox(height: 16),
-
-                        // Emergency Tin Number Contact Name and Phone
-                        _buildTextField(
-                            label: 'Tin Number',
-                            hint: '',
-                            dataMap: _profileData,
-                            dataLabel: 'tin_number'),
-                        _buildTextField(
-                            label: 'Emergency Contact Name',
-                            hint: '',
-                            dataMap: _profileData,
-                            dataLabel: 'emergency_contact_name'),
-                        _buildTextField(
-                            label: 'Emergency Contact Phone No.',
-                            hint: '',
-                            dataMap: _profileData,
-                            dataLabel: 'emergency_contact_number'),
-
-                        const SizedBox(height: 24),
-
-                        // Next Button
-                        SizedBox(
-                          width: double.infinity,
-                          child: CustomButton(
-                            text: 'Next',
-                            onPressed: () {
-                              context.go('/document');
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+        body: BlocListener<ProfileBloc, ProfileState>(
+          listener: (context, state) {
+            if (state is ProfileCreated) {
+              // Navigate to the next page when submission is successful
+              context.go('/document');
+            } else if (state is ProfileCreationFailed) {
+              // Show an error message if submission fails
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error)),
+              );
+            }
+          },
+          child: Builder(
+            builder: (context) {
+              // final profileBloc = context.read<ProfileBloc>();
+              return Container(
+                color: Colors.white, // Set form background to white.
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Stack(children: [
+                  SingleChildScrollView(
+                    child: Form(
+                        key: _formKey, // Assign the form key.
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                ),
+                              const SizedBox(height: 16),
+
+                              // Header Text: "Please tell us a little about yourself"
+                              const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Please tell us a little about ',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold, // Bold text.
+                                    ),
+                                  ),
+                                  Text(
+                                    'yourself',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold, // Bold text.
+                                      color: Colors.blue, // Blue color.
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ]),
-                        const SizedBox(
-                          height: 10,
-                        )
-                      ])),
-            ),
-          ]),
+
+                              const SizedBox(height: 24),
+
+                              // Divider with "or"
+
+                              const SizedBox(height: 16),
+
+                              // First Name, Middle Name, National ID No.
+                              _buildTextField(
+                                  label: 'User Name',
+                                  hint: '',
+                                  dataMap: _userData,
+                                  dataLabel: 'username'),
+                              _buildTextField(
+                                  label: 'Email',
+                                  hint: '',
+                                  dataMap: _userData,
+                                  dataLabel: 'email'),
+                              Row(children: [
+                                Expanded(
+                                  child: _buildTextField(
+                                      label: 'First Name',
+                                      hint: '',
+                                      dataMap: _userData,
+                                      dataLabel: 'firstName'),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: _buildTextField(
+                                      label: 'Last Name',
+                                      hint: '',
+                                      dataMap: _userData,
+                                      dataLabel: 'lastName'),
+                                )
+                              ]),
+
+                              _buildTextField(
+                                  label: 'password',
+                                  hint: '',
+                                  obscureText: true,
+                                  dataMap: _userData,
+                                  dataLabel: 'password'),
+                              _buildTextField(
+                                  label: 'confirm password',
+                                  hint: '',
+                                  obscureText: true,
+                                  dataLabel: "confirm",
+                                  dataMap: _support),
+                              const Row(
+                                children: [
+                                  Expanded(child: Divider()),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'Address Information',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            FontWeight.bold, // Bold text.
+                                        color: Colors.blue, // Blue color.
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(child: Divider()),
+                                ],
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'Country',
+                                        hint: '',
+                                        dataMap: _addressData,
+                                        dataLabel: 'country'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                      child: _buildTextField(
+                                          label: 'Region',
+                                          hint: '',
+                                          dataMap: _addressData,
+                                          dataLabel: 'region')),
+                                ],
+                              ),
+
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'City',
+                                        hint: '',
+                                        dataMap: _addressData,
+                                        dataLabel: 'city'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                      child: _buildTextField(
+                                          label: 'zone or subcity ',
+                                          hint: '',
+                                          dataMap: _addressData,
+                                          dataLabel: 'zone_or_subcity')),
+                                ],
+                              ),
+                              _buildTextField(
+                                  label: 'woreda ',
+                                  hint: '',
+                                  dataMap: _addressData,
+                                  dataLabel: 'woreda'),
+                              _buildTextField(
+                                  label: 'postal code ',
+                                  hint: '',
+                                  dataMap: _addressData,
+                                  dataLabel: 'postal_code'),
+                              _buildTextField(
+                                  label: 'Address line 1 ',
+                                  hint: '',
+                                  dataMap: _addressData,
+                                  dataLabel: 'address_line_1'),
+                              _buildTextField(
+                                  label: 'Address line 2',
+                                  hint: '',
+                                  dataMap: _addressData,
+                                  dataLabel: 'address_line_2'),
+
+                              const Row(
+                                children: [
+                                  Expanded(child: Divider()),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'Profile Information',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight:
+                                            FontWeight.bold, // Bold text.
+                                        color: Colors.blue, // Blue color.
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(child: Divider()),
+                                ],
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              _buildTextField(
+                                  label: 'Nationality',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'nationality'),
+                              // Date of Birth and Gender in one row.
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'Date of Birth',
+                                        hint: '',
+                                        dataMap: _profileData,
+                                        dataLabel: 'date_of_birth'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'Gender',
+                                        hint: '',
+                                        dataMap: _profileData,
+                                        dataLabel: 'gender'),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              _buildTextField(
+                                  label: 'Phone Number',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'phone_number'),
+
+                              // Education Level and Marital Status
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'Education Level',
+                                        hint: '',
+                                        dataMap: _profileData,
+                                        dataLabel: 'education_level'),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: _buildTextField(
+                                        label: 'Marital Status',
+                                        hint: '',
+                                        dataMap: _profileData,
+                                        dataLabel: 'marriage_status'),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 16),
+
+                              // Emergency Tin Number Contact Name and Phone
+                              _buildTextField(
+                                  label: 'Tin Number',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'tin_number'),
+                              _buildTextField(
+                                  label: 'Emergency Contact Name',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'emergency_contact_name'),
+                              _buildTextField(
+                                  label: 'Emergency Contact Phone No.',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'emergency_contact_number'),
+                              _buildTextField(
+                                  label: 'Id type',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'id_type'),
+                              _buildTextField(
+                                  label: 'Selected Id No.',
+                                  hint: '',
+                                  dataMap: _profileData,
+                                  dataLabel: 'id_number'),
+
+                              const SizedBox(height: 24),
+
+                              // Next Button *************************************
+                              BlocBuilder<ProfileBloc, ProfileState>(
+                                  builder: (context, state) {
+                                if (state is ProfileCreating) {
+                                  return const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: CircularProgressIndicator(
+                                            color: Color.fromARGB(255, 0, 0, 0),
+                                          ),
+                                        ),
+                                      ]);
+                                } else {
+                                  return SizedBox(
+                                    width: double.infinity,
+                                    child: CustomButton(
+                                        text: 'Next',
+                                        onPressed: () {
+                                          _profileData['user'] = _userData;
+                                          _profileData['address'] =
+                                              _addressData;
+                                          if (_formKey.currentState
+                                                  ?.validate() ??
+                                              false) {
+                                            _formKey.currentState?.save();
+                                            // Emit the event to submit the form
+                                            BlocProvider.of<ProfileBloc>(
+                                                    context)
+                                                .add(CreateProfile(
+                                                    _profileData));
+                                          }
+                                        }),
+                                  );
+                                }
+                                // to return some widget incase all the above fails
+                              }),
+                              const SizedBox(
+                                height: 10,
+                              )
+                            ])),
+                  ),
+                ]),
+              );
+            },
+          ),
         ));
   }
 
@@ -335,9 +387,9 @@ class PersonalInformationForm extends StatelessWidget {
         validator: validator ??
             (value) {
               // use the custom validator or default one
-              if (value == null || value.isEmpty) {
-                return 'Please enter $label'; // default validation message
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter $label'; // default validation message
+              // }
               return null;
             },
         onSaved: (value) {

@@ -7,14 +7,15 @@ class ProfileProvider {
   ProfileProvider()
       : dio = Dio(
           BaseOptions(
-            baseUrl: 'https://your-api-url.com/data-collectors/',
-            connectTimeout: const Duration(seconds: 5),
-            receiveTimeout: const Duration(seconds: 5),
+            baseUrl: 'http://54.160.180.69/api/v1/user/data-collector-profiles',
+            connectTimeout: const Duration(seconds: 10),
+            receiveTimeout: const Duration(seconds: 10),
           ),
         );
 
   // Create a new profile
-  Future<int> createProfile(Map<String, dynamic> data, {File? profileImage}) async {
+  Future<int> createProfile(Map<String, dynamic> data,
+      {File? profileImage}) async {
     try {
       FormData formData = FormData.fromMap(data);
 
@@ -23,10 +24,17 @@ class ProfileProvider {
         formData.files.add(MapEntry('profile_image', imageFile));
       }
 
-      final response = await dio.post('create/', data: formData);
+      final response = await dio.post('/');
       return response.statusCode ?? 500;
-    } on DioError catch (e) {
-      print('Error creating profile: ${e.message}');
+    } on DioException catch (e) {
+      print('********************************');
+      print('Error creating profile: ${e}');
+      print('Status code: ${e.response}');
+      print('Response data: ${e.response?.data}');
+      print('Request path: ${e.requestOptions.uri}');
+      print('Request headers: ${e.requestOptions.headers}');
+      print('Request data: ${e.requestOptions.data}');
+      return 0;
       return e.response?.statusCode ?? 500;
     }
   }
@@ -40,14 +48,15 @@ class ProfileProvider {
       } else {
         throw Exception('Failed to load user info');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error fetching user info: ${e.message}');
       throw Exception(e.response?.data ?? 'Unknown error');
     }
   }
 
   // Update user profile
-  Future<int> updateProfile(String userId, Map<String, dynamic> data, {File? profileImage}) async {
+  Future<int> updateProfile(String userId, Map<String, dynamic> data,
+      {File? profileImage}) async {
     try {
       FormData formData = FormData.fromMap(data);
 
@@ -58,7 +67,7 @@ class ProfileProvider {
 
       final response = await dio.put('update/$userId/', data: formData);
       return response.statusCode ?? 500;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error updating profile: ${e.message}');
       return e.response?.statusCode ?? 500;
     }
@@ -69,7 +78,7 @@ class ProfileProvider {
     try {
       final response = await dio.delete('delete/$userId/');
       return response.statusCode ?? 500;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       print('Error deleting profile: ${e.message}');
       return e.response?.statusCode ?? 500;
     }

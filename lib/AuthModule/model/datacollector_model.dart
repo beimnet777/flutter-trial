@@ -140,8 +140,8 @@ class DataCollectorUserProfile {
   final String? idImage;
   final String? idNumber;
   final String? profilePicture;
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
 
   DataCollectorUserProfile({
     required this.id,
@@ -161,8 +161,8 @@ class DataCollectorUserProfile {
     this.idImage,
     this.idNumber,
     this.profilePicture,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
   });
 
   factory DataCollectorUserProfile.fromJson(Map<String, dynamic> json) {

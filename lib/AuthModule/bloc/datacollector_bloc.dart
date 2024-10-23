@@ -2,11 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'datacollector_state.dart';
 import 'datacollector_event.dart';
 import './../repository/datacollector_repo.dart';
+import './../data provider/datacollector_provider.dart';
+
+final ProfileProvider profileProvider = ProfileProvider();
+final ProfileRepository profileRepo = ProfileRepository(profileProvider);
 
 class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
-  final ProfileRepository profileRepository;
-
-  ProfileBloc(this.profileRepository) : super(ProfileInitial()) {
+  ProfileBloc() : super(ProfileInitial()) {
     on<CreateProfile>(_onCreateProfile);
     on<GetUserInfo>(_onGetUserInfo);
     on<UpdateProfile>(_onUpdateProfile);
@@ -16,12 +18,13 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
   void _onCreateProfile(CreateProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileCreating());
 
-    final response = await profileRepository.createProfile(event.data,
+    print(event.data);
+    final response = await profileRepo.createProfile(event.data,
         profileImage: event.profileImage);
     if (response == 200) {
       emit(ProfileCreated("Profile created successfully!"));
     } else {
-      emit(ProfileCreationFailed("Failed to create profile."));
+      emit(ProfileCreated("Failed to create profile."));
     }
   }
 
@@ -29,7 +32,7 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
     emit(ProfileLoading());
 
     try {
-      final profile = await profileRepository.getUserInfo(event.userId);
+      final profile = await profileRepo.getUserInfo(event.userId);
       emit(ProfileLoaded(profile));
     } catch (error) {
       emit(ProfileLoadingFailed("Failed to load user profile."));
@@ -39,8 +42,7 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
   void _onUpdateProfile(UpdateProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileUpdating());
 
-    final response = await profileRepository.updateProfile(
-        event.userId, event.data,
+    final response = await profileRepo.updateProfile(event.userId, event.data,
         profileImage: event.profileImage);
     if (response == 200) {
       emit(ProfileUpdated("Profile updated successfully!"));
@@ -52,7 +54,7 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
   void _onDeleteProfile(DeleteProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileDeleting());
 
-    final response = await profileRepository.deleteProfile(event.userId);
+    final response = await profileRepo.deleteProfile(event.userId);
     if (response == 200) {
       emit(ProfileDeleted("Profile deleted successfully!"));
     } else {

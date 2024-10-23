@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_px/AuthModule/screen/profile.dart';
 import 'package:flutter_px/AuthModule/screen/upload.dart';
 import 'App Start/screens/onboarding_screen.dart';
 import 'AuthModule/screen/sign in.dart';
 import 'App Start/screens/welcome_screen.dart';
 import 'package:go_router/go_router.dart';
+import 'AuthModule/bloc/datacollector_bloc.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => HomeScreen(),
+        builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
         path: '/profile',
@@ -35,11 +37,16 @@ class MyApp extends StatelessWidget {
     ],
   );
 
+  MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
+    return  MultiBlocProvider(
+      providers: [BlocProvider(create: (context)=> ProfileBloc())],
+      child: MaterialApp.router(
+        routerConfig: _router,
+        debugShowCheckedModeBanner: false,
+      ),
     );
   }
 }
