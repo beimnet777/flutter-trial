@@ -41,6 +41,7 @@ dependencies:
   dio: ^5.7.0
   bloc: ^8.1.4
   flutter_bloc: ^8.1.6
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ flutter:
     - assets/logo.png
     - assets/PlatformX_logo.png
     - assets/kifiya.png
+    - assets/gradient.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

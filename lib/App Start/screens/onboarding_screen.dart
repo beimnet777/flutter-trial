@@ -61,8 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               children: [
                 buildPage(
                   image: 'assets/Onboarding 2.png',
-                  title:
-                      "${_prefs?.getString('language')}Empower Yourself with Digital Tasks",
+                  title: "Empower Yourself with Digital Tasks",
                   subtitle:
                       "Join a community of contributors and earn supplemental income by completing simple digital tasks.",
                 ),

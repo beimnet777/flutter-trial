@@ -4,14 +4,7 @@ import 'package:dio/dio.dart';
 class ProfileProvider {
   final Dio dio;
 
-  ProfileProvider()
-      : dio = Dio(
-          BaseOptions(
-            baseUrl: 'http://54.160.180.69/api/v1/user/data-collector-profiles',
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-          ),
-        );
+  ProfileProvider() : dio = Dio();
 
   // Create a new profile
   Future<int> createProfile(Map<String, dynamic> data,
@@ -24,7 +17,7 @@ class ProfileProvider {
         formData.files.add(MapEntry('profile_image', imageFile));
       }
 
-      final response = await dio.post('/');
+      final response = await dio.get('http://54.160.180.69/api/v1/user/');
       return response.statusCode ?? 500;
     } on DioException catch (e) {
       print('********************************');

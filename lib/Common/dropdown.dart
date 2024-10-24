@@ -1,5 +1,42 @@
 import 'package:flutter/material.dart';
 
+Widget _buildTextField({
+    required String label,
+    required String hint,
+    FormFieldValidator<String>? validator,
+    required Map<String, dynamic>? dataMap,
+    required String? dataLabel,
+    bool obscureText =
+        false, // default to false, meaning not obscure by default
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16.0),
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: label,
+          hintText: hint,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+        validator: validator ??
+            (value) {
+              // use the custom validator or default one
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter $label'; // default validation message
+              // }
+              return null;
+            },
+        onSaved: (value) {
+          dataMap?[dataLabel as String] = value;
+        },
+        obscureText: obscureText, // for password fields
+      ),
+    );
+  }
+
+
+
 class CustomDropdown extends StatefulWidget {
   final String initialValue;
   final List<String> items;
