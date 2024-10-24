@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter_px/Common/button.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
+  const UploadDocumentsScreen({super.key});
+
   @override
   _UploadDocumentsScreenState createState() => _UploadDocumentsScreenState();
 }
@@ -55,54 +57,59 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Upload documents',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'All documents shall not exceed 10MB',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 24),
-              _buildProgressIndicator(),
-              const SizedBox(height: 24),
-              _buildUploadField('ID / Passport', idPassportFile, 'idPassport'),
-              _buildUploadField('Credentials', credentialsFile, 'credentials'),
-              _buildUploadField(
-                  'Renewed trade license', tradeLicenseFile, 'tradeLicense'),
-              const Spacer(),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Card(
+          elevation: 8,
+          child: Container(
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomButton(
-                    backgroundColor: Colors.white,
-                    textColor: Colors.black,
-                    text: 'Back',
-                    onPressed: () {},
+                  const Text(
+                    'Upload documents',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(
-                    height: 8,
+                  const SizedBox(height: 8),
+                  const Text(
+                    'All documents shall not exceed 10MB',
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
-                  CustomButton(
-                    text: 'Next',
-                    onPressed: () {},
+                  const SizedBox(height: 24),
+                  _buildProgressIndicator(),
+                  const SizedBox(height: 24),
+                  _buildUploadField(
+                      'ID / Passport', idPassportFile, 'idPassport'),
+                  _buildUploadField(
+                      'Credentials', credentialsFile, 'credentials'),
+                  _buildUploadField('Renewed trade license', tradeLicenseFile,
+                      'tradeLicense'),
+                  const Spacer(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      CustomButton(
+                        backgroundColor: Colors.white,
+                        textColor: Colors.black,
+                        text: 'Back',
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      CustomButton(
+                        text: 'Next',
+                        onPressed: () {},
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -116,19 +123,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
       child: Container(
         margin: const EdgeInsets.only(bottom: 16.0),
         decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
+          border: Border.all(color: const Color.fromARGB(255, 126, 126, 126)),
           borderRadius: BorderRadius.circular(8.0),
         ),
-        // child: ListTile(
-        //   leading: const Icon(Icons.browse_gallery),
-        //   title: Text(label),
-        //   subtitle: Text(file != null
-        //       ? "Wow $file"
-        //       : 'Upload your file here'),
-        //   trailing: file != null
-        //       ? const Icon(Icons.check, color: Colors.green)
-        //       : null,
-        // ),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
@@ -140,13 +137,15 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
               ),
               Row(
                 children: [
-                  Icon(Icons.photo),
+                  const Icon(Icons.photo),
                   const SizedBox(
                     width: 3,
                   ),
                   Text(file != null ? "Wow $file" : 'Upload your file here'),
-                  Spacer(),
-                  file != null ?  const Icon(Icons.check, color: Colors.green):  const SizedBox(),
+                  const Spacer(),
+                  file != null
+                      ? const Icon(Icons.check, color: Colors.green)
+                      : const SizedBox(),
                 ],
               )
             ],

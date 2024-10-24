@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'datacollector_state.dart';
 import 'datacollector_event.dart';
-import './../repository/datacollector_repo.dart';
-import './../data provider/datacollector_provider.dart';
+import '../../repository/datacollector_repo.dart';
+import '../../data provider/datacollector_provider.dart';
 
 final ProfileProvider profileProvider = ProfileProvider();
 final ProfileRepository profileRepo = ProfileRepository(profileProvider);

@@ -81,57 +81,47 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
 
-          Positioned(
-            bottom: 40,
-            left: 0,
-            right: 16,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                  width: _currentPage == index ? 12 : 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color:
-                        _currentPage == index ? Colors.blue : Colors.grey[400],
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                );
-              }),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(3, (index) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                margin: const EdgeInsets.symmetric(horizontal: 5),
+                width: _currentPage == index ? 12 : 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color:
+                      _currentPage == index ? Colors.blue : Colors.grey[400],
+                  borderRadius: BorderRadius.circular(5),
+                ),
+              );
+            }),
           ),
           const SizedBox(
             height: 10,
           ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: Column(
-              children: [
-                CustomButton(
-                  text: "Get Started",
-                  backgroundColor: Colors.black,
-                  textColor: Colors.white,
+          Column(
+            children: [
+              CustomButton(
+                text: "Get Started",
+                backgroundColor: Colors.black,
+                textColor: Colors.white,
+                onPressed: () {
+                  _saveVariable("status", "completed");
+                  context.go('/home'); // Navigate to home screen
+                },
+              ),
+              const SizedBox(height: 10),
+              if (_currentPage < 2)
+                TextButton(
                   onPressed: () {
-                    _saveVariable("status", "completed");
-                    context.go('/home'); // Navigate to home screen
+                    _pageController.jumpToPage(2);
                   },
+                  child: const Text("Skip", style: TextStyle(fontSize: 16)),
                 ),
-                const SizedBox(height: 10),
-                if (_currentPage < 2)
-                  TextButton(
-                    onPressed: () {
-                      _pageController.jumpToPage(2);
-                    },
-                    child: const Text("Skip", style: TextStyle(fontSize: 16)),
-                  ),
-                const SizedBox(height: 10),
-                const CutsomFooter()
-              ],
-            ),
+              const SizedBox(height: 10),
+              const CutsomFooter()
+            ],
           ),
 
           // stack children ends here
