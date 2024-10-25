@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
+
 import '../data provider/datacollector_provider.dart';
 
 class ProfileRepository {
@@ -7,7 +9,7 @@ class ProfileRepository {
   ProfileRepository(this.provider);
 
   // Create profile
-  Future<int> createProfile(Map<String, dynamic> data, {File? profileImage}) {
+  Future<Response> createProfile(Map<String, dynamic> data, {File? profileImage}) {
     return provider.createProfile(data, profileImage: profileImage);
   }
 
@@ -18,8 +20,8 @@ class ProfileRepository {
 
   // Update user profile
   Future<int> updateProfile(String userId, Map<String, dynamic> data,
-      {File? profileImage}) {
-    return provider.updateProfile(userId, data, profileImage: profileImage);
+      {Map<String, File>? files}) {
+    return provider.updateProfile(userId, data, files: files);
   }
 
   // Delete user profile

@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         builder: (context, state) => MyNewApp(),
       ),
       GoRoute(
-        path: '/home',
+        path: '/login',
         builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(

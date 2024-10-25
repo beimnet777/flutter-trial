@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'datacollector_state.dart';
 import 'datacollector_event.dart';
 import '../../repository/datacollector_repo.dart';
@@ -17,14 +18,20 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
 
   void _onCreateProfile(CreateProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileCreating());
+    SharedPreferences _preferences = await SharedPreferences.getInstance();
+    try {
+      print(event.data);
+      final response = await profileRepo.createProfile(event.data,
+          profileImage: event.profileImage);
 
-    print(event.data);
-    final response = await profileRepo.createProfile(event.data,
-        profileImage: event.profileImage);
-    if (response == 200) {
+      final userId = response.data['user']['id'];
+      final profileId = response.data['id'];
+      await _preferences.setString("user_id", userId);
+      await _preferences.setString("profile_id", profileId);
+
       emit(ProfileCreated("Profile created successfully!"));
-    } else {
-      emit(ProfileCreated("Failed to create profile."));
+    } catch (error) {
+      emit(ProfileCreated("Something went wrong"));
     }
   }
 
@@ -42,11 +49,15 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
   void _onUpdateProfile(UpdateProfile event, Emitter<ProfileState> emit) async {
     emit(ProfileUpdating());
 
-    final response = await profileRepo.updateProfile(event.userId, event.data,
-        profileImage: event.profileImage);
-    if (response == 200) {
-      emit(ProfileUpdated("Profile updated successfully!"));
-    } else {
+    try {
+      final response = await profileRepo.updateProfile(event.userId, event.data,
+          files: event.files);
+      if (response == 200) {
+        emit(ProfileUpdated("Profile updated successfully!"));
+      } else {
+        emit(ProfileUpdateFailed("Failed to update profile."));
+      }
+    } catch (error) {
       emit(ProfileUpdateFailed("Failed to update profile."));
     }
   }

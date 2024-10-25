@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_px/AuthModule/bloc/profile%20bloc/datacollector_bloc.dart';
+import 'package:flutter_px/AuthModule/bloc/profile%20bloc/datacollector_event.dart';
+import 'package:flutter_px/AuthModule/bloc/profile%20bloc/datacollector_state.dart';
 import 'dart:io';
 
 import 'package:flutter_px/Common/button.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UploadDocumentsScreen extends StatefulWidget {
   const UploadDocumentsScreen({super.key});
@@ -13,28 +19,61 @@ class UploadDocumentsScreen extends StatefulWidget {
 
 class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   // Variables to track the selected files for each field
-  int? idPassportFile;
-  int? credentialsFile;
-  int? tradeLicenseFile;
+  int? idImage;
+  int? profileImage;
+  int? credentialImage;
+
+  Map<String, File>? fileData;
+  Map<String, String> fieldMap = {
+    'credentialImage': 'credential_image',
+    'profileImage': 'profile_picture',
+    'idImage': 'id_image'
+  };
 
   // Progress tracking (0, 1, 2, or 3)
-  int completedSteps = 0;
+  List completedSteps = [];
+
+  SharedPreferences? _preferences;
+  String? profileId;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeSharedPreferences();
+  }
+
+  Future<void> _initializeSharedPreferences() async {
+    _preferences = await SharedPreferences.getInstance();
+    _loadStoredValue();
+  }
+
+  void _loadStoredValue() {
+    setState(() {
+      profileId = _preferences!.getString('profile_id');
+    });
+  }
 
   // Method to handle file picking
   Future<void> _pickFile(String field) async {
-    final result = await FilePicker.platform.pickFiles();
+    final FilePickerResult? result = await FilePicker.platform.pickFiles();
+
     if (result != null) {
-      print("Suiiiiii");
+      try {
+        File file = File(result.files.single.path!);
+        fileData?[fieldMap[field]!] = file;
+      } catch (e) {
+        print("Currently in web mod, please use mobile version");
+      }
       setState(() {
         switch (field) {
-          case 'idPassport':
-            idPassportFile = result.files.single.bytes?.length;
+          case 'idImage':
+            idImage = result.files.single.bytes?.length;
             break;
-          case 'credentials':
-            credentialsFile = result.files.single.bytes?.length;
+          case 'profileImage':
+            profileImage = result.files.single.bytes?.length;
             break;
-          case 'tradeLicense':
-            tradeLicenseFile = result.files.single.bytes?.length;
+          case 'credentialImage':
+            credentialImage = result.files.single.bytes?.length;
             break;
         }
         _updateProgress();
@@ -44,74 +83,93 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
 
   // Update progress based on selected files
   void _updateProgress() {
-    int count = 0;
-    if (idPassportFile != null) count++;
-    if (credentialsFile != null) count++;
-    if (tradeLicenseFile != null) count++;
+    List steps = [];
+    if (idImage != null) steps.add(1);
+    if (profileImage != null) steps.add(2);
+    if (credentialImage != null) steps.add(3);
 
     setState(() {
-      completedSteps = count;
+      completedSteps = steps;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          elevation: 8,
-          child: Container(
-            decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Upload documents',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'All documents shall not exceed 10MB',
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 24),
-                  _buildProgressIndicator(),
-                  const SizedBox(height: 24),
-                  _buildUploadField(
-                      'ID / Passport', idPassportFile, 'idPassport'),
-                  _buildUploadField(
-                      'Credentials', credentialsFile, 'credentials'),
-                  _buildUploadField('Renewed trade license', tradeLicenseFile,
-                      'tradeLicense'),
-                  const Spacer(),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      backgroundColor: Colors.white,
+      body: BlocListener<ProfileBloc, ProfileState>(
+        listener: (context, state) async {
+          if (state is ProfileUpdated) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: const Text("Profile Files Uploaded")),
+            );
+            await Future.delayed(const Duration(seconds: 3));
+            // Navigate to the next page when submission is successful
+            context.go('/');
+          } else if (state is ProfileUpdateFailed) {
+            // Show an error message if submission fails
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.error)),
+            );
+          }
+        },
+        child: Builder(builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Card(
+              elevation: 8,
+              child: Container(
+                decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(15))),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomButton(
-                        backgroundColor: Colors.white,
-                        textColor: Colors.black,
-                        text: 'Back',
-                        onPressed: () {},
+                      const Text(
+                        'Upload documents',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
-                      const SizedBox(
-                        height: 8,
+                      const SizedBox(height: 8),
+                      const Text(
+                        'All documents shall not exceed 10MB',
+                        style: TextStyle(fontSize: 14, color: Colors.grey),
                       ),
-                      CustomButton(
-                        text: 'Next',
-                        onPressed: () {},
+                      const SizedBox(height: 24),
+                      _buildProgressIndicator(),
+                      const SizedBox(height: 24),
+                      _buildUploadField('ID Image', idImage, 'idImage'),
+                      _buildUploadField(
+                          'Profile Picture', profileImage, 'profileImage'),
+                      _buildUploadField('Education Crediential Image',
+                          credentialImage, 'credentialImage'),
+                      const Spacer(),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          CustomButton(
+                            text: 'Next',
+                            onPressed: () {
+                              BlocProvider.of<ProfileBloc>(context).add(
+                                  UpdateProfile(profileId!, {},
+                                      files: fileData));
+                              print(fileData);
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -141,7 +199,9 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                   const SizedBox(
                     width: 3,
                   ),
-                  Text(file != null ? "Wow $file" : 'Upload your file here'),
+                  Text(file != null
+                      ? "File length is $file"
+                      : 'Upload your file here'),
                   const Spacer(),
                   file != null
                       ? const Icon(Icons.check, color: Colors.green)
@@ -160,18 +220,18 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildStep(1, 'Business Info'),
+        _buildStep(1, 'Id Image'),
         const Expanded(child: Divider()),
-        _buildStep(2, 'Business Address'),
+        _buildStep(2, 'Profile Picture'),
         const Expanded(child: Divider()),
-        _buildStep(3, 'Upload Document'),
+        _buildStep(3, 'Credential Image'),
       ],
     );
   }
 
   // Step widget for the progress indicator
   Widget _buildStep(int step, String label) {
-    bool isActive = completedSteps >= step;
+    bool isActive = completedSteps.contains(step);
     return Column(
       children: [
         CircleAvatar(

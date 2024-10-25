@@ -52,6 +52,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -90,8 +91,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 width: _currentPage == index ? 12 : 8,
                 height: 8,
                 decoration: BoxDecoration(
-                  color:
-                      _currentPage == index ? Colors.blue : Colors.grey[400],
+                  color: _currentPage == index ? Colors.blue : Colors.grey,
                   borderRadius: BorderRadius.circular(5),
                 ),
               );
@@ -108,7 +108,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 textColor: Colors.white,
                 onPressed: () {
                   _saveVariable("status", "completed");
-                  context.go('/home'); // Navigate to home screen
+                  context.go('/login'); // Navigate to login screen
                 },
               ),
               const SizedBox(height: 10),
@@ -136,29 +136,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       required String subtitle}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 32.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(image, height: 250),
-          SizedBox(height: 40),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(image, height: 250),
+            const SizedBox(height: 40),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[700],
+            const SizedBox(height: 20),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[700],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

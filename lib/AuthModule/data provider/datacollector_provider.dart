@@ -7,7 +7,7 @@ class ProfileProvider {
   ProfileProvider() : dio = Dio();
 
   // Create a new profile
-  Future<int> createProfile(Map<String, dynamic> data,
+  Future<Response> createProfile(Map<String, dynamic> data,
       {File? profileImage}) async {
     try {
       FormData formData = FormData.fromMap(data);
@@ -17,8 +17,14 @@ class ProfileProvider {
         formData.files.add(MapEntry('profile_image', imageFile));
       }
 
-      final response = await dio.get('http://54.160.180.69/api/v1/user/');
-      return response.statusCode ?? 500;
+      final response = await dio.post(
+          'http://localhost:8000/api/v1/user/data-collector-profiles/',
+          data: formData);
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception(response.statusMessage);
+      }
     } on DioException catch (e) {
       print('********************************');
       print('Error creating profile: ${e}');
@@ -27,15 +33,15 @@ class ProfileProvider {
       print('Request path: ${e.requestOptions.uri}');
       print('Request headers: ${e.requestOptions.headers}');
       print('Request data: ${e.requestOptions.data}');
-      return 0;
-      return e.response?.statusCode ?? 500;
+      throw Exception(e.message);
     }
   }
 
   // Read user profile info
   Future<Map<String, dynamic>> getUserInfo(String userId) async {
     try {
-      final response = await dio.get('me/$userId/');
+      final response = await dio.get(
+          'http://localhost:8000/api/v1/user/data-collector-profiles//$userId/');
       if (response.statusCode == 200) {
         return response.data;
       } else {
@@ -49,16 +55,15 @@ class ProfileProvider {
 
   // Update user profile
   Future<int> updateProfile(String userId, Map<String, dynamic> data,
-      {File? profileImage}) async {
+      {Map<String, File>? files}) async {
     try {
       FormData formData = FormData.fromMap(data);
+      files!.forEach((key, value) async {
+        final imageFile = await MultipartFile.fromFile(value.path);
+        formData.files.add(MapEntry(key, imageFile));
+      });
 
-      if (profileImage != null) {
-        final imageFile = await MultipartFile.fromFile(profileImage.path);
-        formData.files.add(MapEntry('profile_image', imageFile));
-      }
-
-      final response = await dio.put('update/$userId/', data: formData);
+      final response = await dio.patch('update/$userId/', data: formData);
       return response.statusCode ?? 500;
     } on DioException catch (e) {
       print('Error updating profile: ${e.message}');

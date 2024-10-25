@@ -5,20 +5,23 @@ class LoginProvider {
 
   LoginProvider() : dio = Dio();
 
-  Future loging(Map<String, dynamic> data) async {
+  Future<Response> loging(Map<String, dynamic> data) async {
     FormData formData = FormData.fromMap(data);
     try {
       print("*************");
       print(data);
 
       final response = await dio.post(
-        "http://54.160.180.69/api/v1/user/auth/token",
+        "http://localhost:8000/api/v1/user/auth/token/",
         data: data,
       );
-      print(response.data);
-      return response.data;
+      if (response.statusCode == 200) {
+        return response;
+      } else {
+        throw Exception(response.statusCode);
+      }
     } on DioException catch (e) {
-      return e.response?.statusCode ?? 500;
+      throw Exception(e.message);
     }
   }
 }

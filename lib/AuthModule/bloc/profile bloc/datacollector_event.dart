@@ -1,6 +1,6 @@
 import 'dart:io';
 
-abstract class DataCollectorEvent  {
+abstract class DataCollectorEvent {
   @override
   List<Object?> get props => [];
 }
@@ -27,12 +27,12 @@ class GetUserInfo extends DataCollectorEvent {
 class UpdateProfile extends DataCollectorEvent {
   final String userId;
   final Map<String, dynamic> data;
-  final File? profileImage;
+  final Map<String, File>? files;
 
-  UpdateProfile(this.userId, this.data, {this.profileImage});
+  UpdateProfile(this.userId, this.data, {this.files});
 
   @override
-  List<Object?> get props => [userId, data, profileImage];
+  List<Object?> get props => [userId, data, files];
 }
 
 class DeleteProfile extends DataCollectorEvent {
