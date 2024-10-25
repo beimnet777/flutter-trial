@@ -55,10 +55,10 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
       if (response == 200) {
         emit(ProfileUpdated("Profile updated successfully!"));
       } else {
-        emit(ProfileUpdateFailed("Failed to update profile."));
+        emit(ProfileUpdated("Failed to update profile."));
       }
     } catch (error) {
-      emit(ProfileUpdateFailed("Failed to update profile."));
+      emit(ProfileUpdated("Failed to update profile."));
     }
   }
 

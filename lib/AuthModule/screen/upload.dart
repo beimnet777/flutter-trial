@@ -146,23 +146,35 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                       _buildUploadField('Education Crediential Image',
                           credentialImage, 'credentialImage'),
                       const Spacer(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          CustomButton(
-                            text: 'Next',
-                            onPressed: () {
-                              BlocProvider.of<ProfileBloc>(context).add(
-                                  UpdateProfile(profileId!, {},
-                                      files: fileData));
-                              print(fileData);
-                            },
-                          ),
-                        ],
-                      ),
+                      BlocBuilder<ProfileBloc, ProfileState>(
+                          builder: (context, state) {
+                        if (state is ProfileUpdating) {
+                          return const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Color.fromARGB(255, 0, 0, 0),
+                                  ),
+                                ),
+                              ]);
+                        } else {
+                          return SizedBox(
+                            width: double.infinity,
+                            child: CustomButton(
+                                text: 'Next',
+                                onPressed: () {
+                                  profileId = profileId ?? "e";
+                                  BlocProvider.of<ProfileBloc>(context).add(
+                                      UpdateProfile(profileId!, {},
+                                          files: fileData));
+                                }),
+                          );
+                        }
+                        // to return some widget incase all the above fails
+                      }),
                     ],
                   ),
                 ),
