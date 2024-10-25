@@ -86,7 +86,7 @@ class _LogInScreen extends State<LogInScreen> {
 
                       // Subtitle
                       const Text(
-                        'Please Enter your username and password',
+                        'Please enter your username and password',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -111,7 +111,7 @@ class _LogInScreen extends State<LogInScreen> {
                           return null;
                         },
                         onSaved: (value) {
-                          _loginData["username"] = value;
+                          _loginData["username"] = value as String;
                         }, // for password fields
                       ),
 
@@ -143,7 +143,7 @@ class _LogInScreen extends State<LogInScreen> {
                           return null;
                         },
                         onSaved: (value) {
-                          _loginData['password'] = value;
+                          _loginData['password'] = value as String;
                         },
                         obscureText: _isObscure, // for password fields
                       ),
@@ -194,7 +194,7 @@ class _LogInScreen extends State<LogInScreen> {
                               'Don\'t have an account?',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 15,
                                 color: Colors.grey,
                               ),
                             ),
@@ -205,7 +205,7 @@ class _LogInScreen extends State<LogInScreen> {
                                 'Create New Account',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 15,
                                   color: Color.fromARGB(255, 96, 169, 222),
                                 ),
                               ),

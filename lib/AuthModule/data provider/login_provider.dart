@@ -13,10 +13,7 @@ class LoginProvider {
 
       final response = await dio.post(
         "http://54.160.180.69/api/v1/user/auth/token",
-        data: formData,
-        options: Options(
-          headers: {'Content-Type': 'application/json'},
-        ),
+        data: data,
       );
       print(response.data);
       return response.data;
