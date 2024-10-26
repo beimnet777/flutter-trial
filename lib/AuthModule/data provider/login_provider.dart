@@ -3,25 +3,25 @@ import 'package:dio/dio.dart';
 class LoginProvider {
   final Dio dio;
 
-  LoginProvider() : dio = Dio();
+  LoginProvider()
+      : dio = Dio(BaseOptions(
+          baseUrl: 'http://localhost:8000/api/v1/user/auth/',
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ));
 
   Future<Response> loging(Map<String, dynamic> data) async {
-    FormData formData = FormData.fromMap(data);
     try {
-      print("*************");
-      print(data);
-
       final response = await dio.post(
-        "http://localhost:8000/api/v1/user/auth/token/",
+        "token/",
         data: data,
       );
-      if (response.statusCode == 200) {
-        return response;
-      } else {
-        throw Exception(response.statusCode);
-      }
+      return response;
     } on DioException catch (e) {
-      throw Exception(e.message);
+      if (e.response!.statusCode == 401) {
+        throw Exception("Incorrect Username or Password");
+      }
+      throw Exception("Something went wrong");
     }
   }
 }

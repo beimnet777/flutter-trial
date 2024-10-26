@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_px/AuthModule/bloc/login%20bloc/login_bloc.dart';
 import 'package:flutter_px/AuthModule/screen/profile.dart';
+import 'package:flutter_px/AuthModule/screen/stepper.dart';
 import 'package:flutter_px/AuthModule/screen/upload.dart';
 import 'App Start/screens/onboarding_screen.dart';
 import 'AuthModule/screen/sign in.dart';
@@ -27,11 +28,11 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/profile',
-        builder: (context, state) => PersonalInformationForm(),
+        builder: (context, state) => const NewProfilePage(),
       ),
       GoRoute(
         path: '/document',
-        builder: (context, state) => UploadDocumentsScreen(),
+        builder: (context, state) => const UploadDocumentsScreen(),
       )
     ],
   );

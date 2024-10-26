@@ -34,9 +34,14 @@ class _LogInScreen extends State<LogInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: BlocListener<LoginBloc, LoginState>(listener: (context, state) {
+      body:
+          BlocListener<LoginBloc, LoginState>(listener: (context, state) async {
         if (state is Logged) {
           // Navigate to the next page when submission is successful
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Logged In Successfuly")),
+          );
+          await Future.delayed(const Duration(seconds: 1));
           context.go('/');
         } else if (state is LoggingFailed) {
           // Show an error message if submission fails

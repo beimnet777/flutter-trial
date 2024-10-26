@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class DropdownInputField extends StatefulWidget {
   final bool validation;
-  final List<String> options;
+  final Map<String, dynamic> options;
   final String defaultValue;
   final String dataKey;
   final Map<String, dynamic> data;
@@ -39,7 +38,7 @@ class _DropdownInputFieldState extends State<DropdownInputField> {
     final width = size.width;
 
     return DropdownButtonFormField<String>(
-      items: widget.options.map((String value) {
+      items: widget.options.keys.map((String value) {
         return DropdownMenuItem<String>(
           value: value,
           enabled: true,
@@ -52,7 +51,7 @@ class _DropdownInputFieldState extends State<DropdownInputField> {
         });
       },
       onSaved: (String? newValue) {
-        widget.data[widget.lable] = newValue;
+        widget.data[widget.dataKey] = widget.options[newValue];
       },
       validator: validateDropdown,
       style: null,

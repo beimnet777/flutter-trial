@@ -23,7 +23,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
   int? profileImage;
   int? credentialImage;
 
-  Map<String, File>? fileData;
+  Map<String, File>? fileData = {};
   Map<String, String> fieldMap = {
     'credentialImage': 'credential_image',
     'profileImage': 'profile_picture',
@@ -62,6 +62,7 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
         File file = File(result.files.single.path!);
         fileData?[fieldMap[field]!] = file;
       } catch (e) {
+        print(e);
         print("Currently in web mod, please use mobile version");
       }
       setState(() {
@@ -166,7 +167,8 @@ class _UploadDocumentsScreenState extends State<UploadDocumentsScreen> {
                             child: CustomButton(
                                 text: 'Next',
                                 onPressed: () {
-                                  profileId = profileId ?? "e";
+                                  profileId = profileId ??
+                                      '8d4fa07c-5cfd-43da-bb16-d63e4aba0e91';
                                   BlocProvider.of<ProfileBloc>(context).add(
                                       UpdateProfile(profileId!, {},
                                           files: fileData));

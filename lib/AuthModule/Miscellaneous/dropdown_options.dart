@@ -1,17 +1,21 @@
-const List<String> gender = ['Male', 'Female'];
+const Map<String, String> gender = {'Male': "M", 'Female': "F"};
 
-const List<String> educationLevelStrings = [
-  'No Formal Education',
-  'Primary',
-  'Secondary',
-  'High School',
-  'Associate Degree',
-  'Bachelors Degree',
-  'Masters Degree',
-  'Doctorate',
-  'Professional Certificate',
-];
+const Map<String, String> educationLevelStrings = {
+  'No Formal Education': "no_formal_education",
+  'Primary': "primary",
+  'Secondary': "secondary",
+  'High School': "high_school",
+  'Associate Degree': "associate_degree",
+  'Bachelors Degree': "bachelors_degree",
+  'Masters Degree': "masters_degree",
+  'Doctorate': "doctorate",
+  'Professional Certificate': "professional_certificate"
+};
 
-const List<String> maritialStatus = ["Single", "Married", "Divorced"];
+const Map<String, bool> maritialStatus = {"Single": false, "Married": true};
 
-const List<String> idType = ["Passport", "National Id", "Driver License"];
+const Map<String, String> idType = {
+  "Passport": "passport",
+  "National Id": "national_id",
+  "Driver License": "driver_license"
+};

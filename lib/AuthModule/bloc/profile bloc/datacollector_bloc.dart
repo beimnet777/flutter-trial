@@ -31,7 +31,7 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
 
       emit(ProfileCreated("Profile created successfully!"));
     } catch (error) {
-      emit(ProfileCreated("Something went wrong"));
+      emit(ProfileCreationFailed(error.toString().split(':')[1]));
     }
   }
 
@@ -55,10 +55,10 @@ class ProfileBloc extends Bloc<DataCollectorEvent, ProfileState> {
       if (response == 200) {
         emit(ProfileUpdated("Profile updated successfully!"));
       } else {
-        emit(ProfileUpdated("Failed to update profile."));
+        emit(ProfileUpdateFailed("Failed to update profile."));
       }
     } catch (error) {
-      emit(ProfileUpdated("Failed to update profile."));
+      emit(ProfileUpdateFailed("Failed to update profile."));
     }
   }
 

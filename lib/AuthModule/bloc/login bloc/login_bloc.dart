@@ -28,10 +28,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       await _preferences.setString("user_id", decodedToken['user_id']);
       await _preferences.setString("profile_id", decodedToken['profile_id']);
-
+      print(_preferences.getString("language"));
       emit(Logged());
     } catch (error) {
-      emit(LoggingFailed("Incorrect username or password"));
+      emit(LoggingFailed(error.toString().split(':')[1]));
     }
   }
 }
